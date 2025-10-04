@@ -61,6 +61,3 @@ You can explore the interactive dashboard on Tableau Public here:
 
 You can explore the interactive dashboard on Power bi Web here:  
 [View on Power bi Web](https://app.powerbi.com/view?r=eyJrIjoiN2RlOWQ0MmEtN2JkYy00ODZiLTgzODYtYTgwYzg2MzQwOTQyIiwidCI6IjZmNWEzYzBiLWNmYTgtNDg4ZC1hNDNjLTQ3MzljN2MwMmNiYiJ9)
-
-Customer Ratings: Most ratings fall under the “Good” category.
-Discounts and Revenue: Products with 0%-5% discounts contribute the maximum sales amount.

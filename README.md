@@ -7,13 +7,24 @@ The main objectives are:
 -  Generate meaningful insights on customer preferences , Inventory and Product Analysis and sales performance.
 - Provide visualizations to communicate trends effectively. 
 ## Dashboard Preview
+#Power BI Dashboard
 ![Power BI Dashboard](AdventureWorksPowerBi.png)
+
+#Excel Dashboard
 ![Excel Dashboard](Adventure%20Works%20Dashboard%20Excel.png)
+
+
+#Tableau Dashboard
 ![Tableau Dashboard](Adventure%20Works%20Tableau.png)
 
 ## Download PDFs
+## Download in Power BI
 [Power BI Dashboard](AdventureWorksPowerBi.pdf)
+
+## Download in Excel
 [Excel Dashboard](Adventure%20Works%20Dashboard%20Excel.pdf)
+
+## Download in Tableau
 [Tableau Dashboard](Adventure%20Works%20Tableau.pdf)
 
 ## View Live Dashboard

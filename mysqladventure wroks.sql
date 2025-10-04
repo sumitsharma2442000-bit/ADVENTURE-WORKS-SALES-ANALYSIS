@@ -35,6 +35,10 @@ select * from excelrprojects.factinternetsales
 union all 
 select * from excelrprojects.fact_internet_sales_news;
 
+#______________________________________________________________
+select * from master_sales;
+
+
 # Merge Products, ProductCategory and ProductSubCategory Tables
 CREATE TABLE master_product (
     ProductKey INT PRIMARY KEY,
@@ -98,24 +102,13 @@ LEFT JOIN DimProductSubcategory sc
 LEFT JOIN DimProductCategory c 
     ON sc.ProductCategoryKey = c.ProductCategoryKey;
     
-    # Lookup the Productname from the Product sheet to Sales sheet.
     
-select 
-    s.*,p.EnglishProductName as product_name from master_sales as s 
-    left join master_product as p 
-    on s.ProductKey = p.ProductKey;
-    
-    #Lookup the Customerfullname from the Customer Table and Unit Price 
-    #from Product Table to Sales sheet.
- SELECT 
-    s.*, 
-    CONCAT(c.FirstName, ' ', c.MiddleName, ' ', c.LastName) AS CustomerFullName,
-    p.ListPrice AS ListPrice
-FROM master_sales AS s
-LEFT JOIN master_product AS p 
-    ON s.ProductKey = p.ProductKey
-LEFT JOIN dimcustomer AS c  
-    ON s.CustomerKey = c.CustomerKey;
+#________________________________________________________________
+    select * from master_product;
+
+#________________________________________________________________
+
+# DATA CLEANING & HANDLING MISSING VALUES & CHANGING DATA TYPES
 
 # CONVERTING COLUMN DIMDATE STRING TO DATE FORMAT
 SET SQL_SAFE_UPDATES = 0;
@@ -161,7 +154,31 @@ WHERE
 
 
 
-#  CALCULATIONS 
+# Lookup the Productname from the Product sheet to Sales sheet.
+   
+#________________________________________________________________   
+select 
+    s.*,p.EnglishProductName as product_name from master_sales as s 
+    left join master_product as p 
+    on s.ProductKey = p.ProductKey;
+    
+#________________________________________________________________
+#Lookup the Customerfullname from the Customer Table and List Price 
+#from Product Table to Sales sheet.
+
+ SELECT 
+    s.*, 
+    CONCAT(c.FirstName, ' ', c.MiddleName, ' ', c.LastName) AS CustomerFullName,
+    p.ListPrice AS ListPrice
+FROM master_sales AS s
+LEFT JOIN master_product AS p 
+    ON s.ProductKey = p.ProductKey
+LEFT JOIN dimcustomer AS c  
+    ON s.CustomerKey = c.CustomerKey;
+
+
+#_____________________________________________________________________
+# CALCULATIONS 
 SELECT 
 YEAR(OrderDate) AS `YEAR`,
 MONTH(OrderDate) AS Monthno,
@@ -183,7 +200,7 @@ CASE
     END AS FinancialQuarter
 from master_sales; 
 
-#  Calculate the Sales amount using the columns (Unit price, Order quantity, Unit discount)
+#Calculate the Sales amount using the columns (Unit price, Order quantity, Unit discount)
 #Calculate the Productioncost using the columns (Unit cost, Order quantity)
 #Calculate the Profit. (Sales - ProductionCost)
 
@@ -199,119 +216,120 @@ SET
     PRODUCTIONCOST = ProductStandardCost * OrderQuantity,
     PROFIT = ((UnitPrice * OrderQuantity) * (1 - UnitPriceDiscountPct)) - (ProductStandardCost * OrderQuantity);
  
-# SALES,PROFIT,PRODUCTIONCOST BY MONTH 
-SELECT 
-  MONTHNAME(ORDERDATE) AS MonthName,
-  SUM(SALES) AS TotalSales,
-  SUM(PROFIT) AS PROFIT,
-  SUM(PRODUCTIONCOST) AS PRODUCTIONCOST
-FROM MASTER_SALES
-GROUP BY MONTH(ORDERDATE), MONTHNAME(ORDERDATE)
-ORDER BY MONTH(ORDERDATE);
-
-
-# SALES BY QUARTER
-SELECT 
-concat("QTR -",QUARTER(ORDERDATE)),
-  SUM(SALES) AS SALES
-FROM MASTER_SALES 
-GROUP BY QUARTER(ORDERDATE),concat("QTR -",QUARTER(ORDERDATE))
-ORDER BY QUARTER(ORDERDATE) ASC;
-
-# Salesamount and Productioncost , Profit by year 
-SELECT
-YEAR(ORDERDATE) ,
-  SUM(SALES) AS SALES,
-  SUM(PROFIT) AS PROFIT,
-  SUM(PRODUCTIONCOST) AS PRODUCTION_COST
-FROM MASTER_SALES 
-GROUP BY YEAR(ORDERDATE)
-order BY YEAR(ORDERDATE) asc ;
-
-  
-  # SALES, PROFIT AND PRODUCTION COST BY GENDER OF CUSTOMERS
-  SELECT 
-  ifnull(C.GENDER,'GrandTotal') AS GENDER,
-  SUM(S.PROFIT) AS PROFIT ,
-  SUM(S.SALES) AS SALES 
-  FROM MASTER_SALES AS S LEFT JOIN 
-  DIMCUSTOMER AS C 
-  ON S.CustomerKey = C.CustomerKey
-  GROUP BY C.GENDER with rollup
-  ;
-
-# SALES AND PROFIT BY MARITAL STATUS OF CUSTOMER 
-  SELECT 
-  ifnull(C.MaritalStatus, 'GrandTotal') AS MARITAL_STATUS,
-  SUM(S.PROFIT) AS PROFIT ,
-  SUM(S.SALES) AS SALES 
-  FROM MASTER_SALES AS S LEFT JOIN 
-  DIMCUSTOMER AS C 
-  ON S.CustomerKey = C.CustomerKey
-  GROUP BY C.MaritalStatus with rollup
-  ;
-
-# TOP 5 PRODUCT (by Order SALES)  with PROFIT AND PRODUCTION cost 
-WITH cal1 AS (
-  SELECT 
-    C.EnglishProductName AS PRODUCT,
-    SUM(S.PROFIT) AS PROFIT,
-    SUM(S.SALES) AS SALES,
-    SUM(S.PRODUCTIONCOST) AS PRODUCTION_COST
-  FROM MASTER_SALES AS S
-  LEFT JOIN master_product AS C 
-    ON S.ProductKey = C.ProductKey
-  GROUP BY C.EnglishProductName
-  ORDER BY SALES DESC
-  LIMIT 5
-)
-SELECT 
-  IFNULL(PRODUCT, 'Grand_Total') AS PRODUCT,
-  SUM(PROFIT) AS PROFIT,
-  SUM(SALES) AS SALES,
-  SUM(PRODUCTION_COST) AS PRODUCTION_COST
-FROM cal1
-GROUP BY PRODUCT WITH ROLLUP
-ORDER BY 
-  CASE WHEN PRODUCT IS NULL THEN 1 ELSE 0 END,
-  SALES DESC;
-
-# TOP 5 PRODUCTCATEGORY (by Order SALES)  with PROFIT AND PRODUCTION cost  
-WITH cal1 AS (
-  SELECT 
-    C.EnglishProductCategoryName AS PRODUCTCATEGORY,
-    SUM(S.PROFIT) AS PROFIT,
-    SUM(S.SALES) AS SALES,
-    SUM(S.PRODUCTIONCOST) AS PRODUCTION_COST
-  FROM MASTER_SALES AS S
-  LEFT JOIN master_product AS C 
-    ON S.ProductKey = C.ProductKey
-  GROUP BY C.EnglishProductCategoryName
-)
-SELECT 
-  IFNULL(PRODUCTCATEGORY, 'Grand_Total') AS PRODUCTCATEGORY,
-  SUM(SALES) AS SALES,
-  SUM(PROFIT) AS PROFIT,
-  SUM(PRODUCTION_COST) AS PRODUCTION_COST
-FROM cal1
-GROUP BY PRODUCTCATEGORY WITH ROLLUP
-ORDER BY 
-  CASE WHEN PRODUCTCATEGORY IS NULL THEN 1 ELSE 0 END,
-  SALES DESC;
-
-# TOP 5 COUNTRY BY SUM OF SALES,PROFIT 
-WITH CAL1 AS (
-SELECT 
- D.SalesTerritoryCountry AS COUNTRY,
- SUM(S.PROFIT) AS PROFIT ,
- SUM(S.SALES) AS SALES 
- FROM MASTER_SALES AS S LEFT JOIN dimsalesterritory AS D
- ON S.SalesTerritoryKey = D.SalesTerritoryKey
- GROUP BY D.SalesTerritoryCountry
- ORDER BY SALES DESC
- LIMIT 5)
- SELECT IFNULL(COUNTRY,'Grand_Total') as COUNTRY,SUM(SALES) AS SALES,SUM(PROFIT) AS PROFIT
- FROM CAL1 
- GROUP BY COUNTRY WITH ROLLUP
- ORDER BY CASE WHEN COUNTRY IS NULL THEN 1 ELSE 0 END , SALES DESC;
  
+# EXPLORING THE DATA 
+#______________________________________________________________________
+# Overall Sales, Profit, Production Cost, and Profit Margin (%) – KPI Summary
+SELECT 
+    SUM(Sales) AS SALES,
+    SUM(Profit) AS PROFIT,
+    SUM(ProductionCost) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(Profit) / NULLIF(SUM(Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales;
+
+#______________________________________________________________________
+#Monthly Sales, Profit, Production Cost, and Profit Margin (%) 
+SELECT 
+    MONTHNAME(OrderDate) AS MONTH_NAME,
+    SUM(Sales) AS SALES,
+    SUM(Profit) AS PROFIT,
+    SUM(ProductionCost) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(Profit) / NULLIF(SUM(Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales
+GROUP BY MONTH(OrderDate), MONTHNAME(OrderDate)
+ORDER BY MONTH(OrderDate);
+
+
+#______________________________________________________________________
+#Quarterly Sales, Profit, Production Cost, and Profit Margin (%)
+SELECT
+    CONCAT('QTR-', QUARTER(OrderDate)) AS QUARTER,
+    SUM(Sales) AS SALES,
+    SUM(Profit) AS PROFIT,
+    SUM(ProductionCost) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(Profit) / NULLIF(SUM(Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales
+GROUP BY QUARTER(OrderDate), CONCAT('QTR-', QUARTER(OrderDate))
+ORDER BY QUARTER(OrderDate);
+
+
+#______________________________________________________________________
+#Yearly Sales, Profit, Production Cost, and Profit Margin (%)
+SELECT
+    YEAR(OrderDate) AS YEAR,
+    SUM(Sales) AS SALES,
+    SUM(Profit) AS PROFIT,
+    SUM(ProductionCost) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(Profit) / NULLIF(SUM(Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales
+GROUP BY YEAR(OrderDate)
+ORDER BY YEAR(OrderDate) ASC;
+
+#______________________________________________________________________  
+  # Gender-wise Sales, Profit, and Profit Margin (%)
+SELECT 
+    C.Gender AS GENDER,
+    SUM(S.Sales) AS SALES,
+    SUM(S.Profit) AS PROFIT,
+    CONCAT(ROUND((SUM(S.Profit) / NULLIF(SUM(S.Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales AS S
+LEFT JOIN DimCustomer AS C 
+    ON S.CustomerKey = C.CustomerKey
+GROUP BY C.Gender;
+
+#______________________________________________________________________
+# Marital Status-wise Sales, Profit, and Profit Margin (%)
+SELECT 
+    C.MaritalStatus AS MARITAL_STATUS,
+    SUM(S.Sales) AS SALES,
+    SUM(S.Profit) AS PROFIT,
+    CONCAT(ROUND((SUM(S.Profit) / NULLIF(SUM(S.Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales AS S
+LEFT JOIN DimCustomer AS C 
+    ON S.CustomerKey = C.CustomerKey
+GROUP BY C.MaritalStatus;
+
+#______________________________________________________________________
+# Top 5 Products by Sales with Profit, Production Cost, and Profit Margin (%)
+ SELECT 
+    C.EnglishProductName AS PRODUCT,
+    SUM(S.SALES) AS SALES,
+    SUM(S.PROFIT) AS PROFIT,
+    SUM(S.PRODUCTIONCOST) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(S.PROFIT) / NULLIF(SUM(S.SALES), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM MASTER_SALES AS S
+LEFT JOIN master_product AS C 
+    ON S.ProductKey = C.ProductKey
+GROUP BY C.EnglishProductName
+ORDER BY SALES DESC
+LIMIT 5;
+
+#________________________________________________________________________________________________________
+# Product Category Sales, Profit, Production Cost, and Profit Margin (%)
+SELECT 
+    C.EnglishProductCategoryName AS PRODUCT_CATEGORY,
+    SUM(S.SALES) AS SALES,
+    SUM(S.PROFIT) AS PROFIT,
+    SUM(S.PRODUCTIONCOST) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(S.PROFIT) / NULLIF(SUM(S.SALES), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM MASTER_SALES AS S
+LEFT JOIN master_product AS C 
+    ON S.ProductKey = C.ProductKey
+GROUP BY C.EnglishProductCategoryName
+ORDER BY SALES DESC;
+
+#________________________________________________________________________________________________________
+# Country-wise Sales, Profit, Production Cost, and Profit Margin (%)
+    SELECT
+    D.SalesTerritoryCountry AS COUNTRY,
+    SUM(S.Sales) AS SALES,
+    SUM(S.Profit) AS PROFIT,
+    SUM(S.ProductionCost) AS PRODUCTION_COST,
+    CONCAT(ROUND((SUM(S.Profit) / NULLIF(SUM(S.Sales), 0)) * 100, 2),"%") AS PROFIT_MARGIN_PERCENT
+FROM Master_Sales AS S
+LEFT JOIN dimSalesTerritory AS D
+    ON S.SalesTerritoryKey = D.SalesTerritoryKey
+GROUP BY D.SalesTerritoryCountry
+ORDER BY SALES DESC;
+
+

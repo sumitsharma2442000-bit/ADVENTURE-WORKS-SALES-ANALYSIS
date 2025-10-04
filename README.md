@@ -35,6 +35,14 @@ Data cleaning using tools like MYSQL , POWER QUARY , DATA MODELING IN POWER PIVO
 # Tableau Dashboard
 ![Tableau Dashboard](Adventure%20Works%20Tableau.png)
 
+
+# MYSQL_ANALYSIS
+![MYSQL_ANALYSIS_PART_1](MYSQL_PART1.png)
+
+![MYSQL ANALYSIS_PART 2](MYSQL_PART2.png)
+
+
+
 ## Download PDFs
 ## Download in Power BI
 [Power BI Dashboard](AdventureWorksPowerBi.pdf)

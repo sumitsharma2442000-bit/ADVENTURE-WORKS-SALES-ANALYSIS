@@ -1,5 +1,6 @@
 # ADVENTURE-WORKS-SALES-ANALYSIS
-- Project Overview\n
+- Project Overview
+ 
 This project analyzes an Adventure Works Cycle dataset containing DimCustomer ,DimDate ,DimSalesTerritory ,DimProduct ,DimProductCategory ,DimProductSubCategory ,Fact_Internet_Sales_new ,FactInternetSales 
 The main objectives are:  
 
@@ -10,11 +11,11 @@ The main objectives are:
 #Power BI Dashboard
 ![Power BI Dashboard](AdventureWorksPowerBi.png)
 
-#Excel Dashboard
+# Excel Dashboard
 ![Excel Dashboard](Adventure%20Works%20Dashboard%20Excel.png)
 
 
-#Tableau Dashboard
+# Tableau Dashboard
 ![Tableau Dashboard](Adventure%20Works%20Tableau.png)
 
 ## Download PDFs
@@ -28,6 +29,11 @@ The main objectives are:
 [Tableau Dashboard](Adventure%20Works%20Tableau.pdf)
 
 ## View Live Dashboard
+
+You can explore the interactive dashboard on Tableau Public here: 
+[View on Tableau Public](https://public.tableau.com/app/profile/sumit.sharma1352/viz/Adventure_Works_Sales_Analysis/Dashboard)
+
+
 You can explore the interactive dashboard on Power bi Web here:  
 [View on Power bi Web](https://app.powerbi.com/view?r=eyJrIjoiMzgwNmM3Y2YtYjYxNS00ZDMwLThhNTQtZmVlNWFlMzY5NTRlIiwidCI6IjBhOWI3YWFkLTc0MDEtNDdlYi04OTUwLTU2NTk3NDQwMzViOSJ9)
 

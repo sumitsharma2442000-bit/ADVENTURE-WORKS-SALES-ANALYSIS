@@ -1,5 +1,5 @@
 # ADVENTURE-WORKS-SALES-ANALYSIS
-Project Overview
+- Project Overview\n
 This project analyzes an Adventure Works Cycle dataset containing DimCustomer ,DimDate ,DimSalesTerritory ,DimProduct ,DimProductCategory ,DimProductSubCategory ,Fact_Internet_Sales_new ,FactInternetSales 
 The main objectives are:  
 

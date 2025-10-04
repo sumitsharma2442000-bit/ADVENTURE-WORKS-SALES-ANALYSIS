@@ -1,12 +1,29 @@
 # ADVENTURE-WORKS-SALES-ANALYSIS
 - Project Overview
  
-This project analyzes an Adventure Works Cycle dataset containing DimCustomer ,DimDate ,DimSalesTerritory ,DimProduct ,DimProductCategory ,DimProductSubCategory ,Fact_Internet_Sales_new ,FactInternetSales 
-The main objectives are:  
+This project analyzes an Adventure Works Cycle dataset containing DimCustomer ,DimDate ,DimSalesTerritory ,DimProduct ,DimProductCategory ,DimProductSubCategory ,Fact_Internet_Sales_new ,FactInternetSales. highlighting various dashboards that have been developed using a range of data analysis tools such as Excel, Power BI, Tableau, and SQL. Emphasis is placed on the principles of effective data visualization and analysis techniques, illustrating how these tools can be utilized to derive insights from complex datasets.
 
-- Explore sales distribution across categories, subcategories,
--  Generate meaningful insights on customer preferences , Inventory and Product Analysis and sales performance.
-- Provide visualizations to communicate trends effectively. 
+Focused on key business metrics like Sales, Profit, Production Cost, and Profit Margin (%) across different dimensions:
+Demographic (Gender, Marital Status)
+Time-based (Year, Month, Quarter)
+Geographic (Country)
+Product-based (Category and Top Products)
+Data cleaning using tools like MYSQL , POWER QUARY , DATA MODELING IN POWER PIVOT AND TABLEAU AND POWER BI 
+
+
+# Key Business Insights
+- Consistent overall profit margin of around 41%, showing stable cost management.
+- Top 5 Products (mainly Mountain Bikes) contributed significantly to revenue
+- Bikes category is the most profitable among all product categories.
+- United States led in both sales and profit, followed by Australia and the UK
+- Gender & marital status distribution shows nearly equal purchase behavior.
+- Profit margin improved in 2014 compared to earlier years, indicating better pricing or cost control strategies
+
+
+
+
+
+
 ## Dashboard Preview
 # Power BI Dashboard
 ![Power BI Dashboard](AdventureWorksPowerBi.png)
@@ -37,21 +54,5 @@ You can explore the interactive dashboard on Tableau Public here:
 You can explore the interactive dashboard on Power bi Web here:  
 [View on Power bi Web](https://app.powerbi.com/view?r=eyJrIjoiN2RlOWQ0MmEtN2JkYy00ODZiLTgzODYtYTgwYzg2MzQwOTQyIiwidCI6IjZmNWEzYzBiLWNmYTgtNDg4ZC1hNDNjLTQ3MzljN2MwMmNiYiJ9)
 
-
-Key Findings
-Top Categories: Electronics and Home & Kitchen dominate overall sales.
-Top Subcategories: Home Theater/TV and Mobile Accessories are the best-selling subcategories.
-Peak Sales 2024: Highest sales reached $9.15M, indicating peak performance.
-2025 Trend: Sharp drop in sales compared to 2023 and 2024.
-2023 Performance: Started strong with $8.0M in sales.
-Category Consistency: Electronics remain the top-selling main category across all countries.
-Monthly Peak: Highest sales occur in July.
-Top Countries by Sales Volume:
-  USA: $8.2M
-  UK: $5M
-Popular Payment Methods: Cash on Delivery (COD) and Net Banking account for 27.8% of transactions.
-Top Customer Age Group: 30-39 years old generate the highest sales ($5.3M).
-Discount Impact: Higher discounts slightly increase quantity sold but reduce total revenue.
-Gender Influence: Gender does not significantly influence product category choices; sales are almost equal for males and females.
 Customer Ratings: Most ratings fall under the “Good” category.
 Discounts and Revenue: Products with 0%-5% discounts contribute the maximum sales amount.
